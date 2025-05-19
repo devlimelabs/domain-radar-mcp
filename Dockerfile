@@ -1,21 +1,23 @@
-FROM node:20-alpine
+FROM node:20
 
 WORKDIR /app
 
-# Install pnpm and typescript globally
-RUN npm install -g pnpm typescript
-
-# Copy package files first for better caching
+# Copy package files
 COPY package.json pnpm-lock.yaml tsconfig.json ./
 
-# Install dependencies
-RUN pnpm install --frozen-lockfile
+# Install pnpm and dependencies
+RUN npm install -g pnpm
+RUN pnpm install
 
-# Copy source code
-COPY src ./src
+# Copy source
+COPY src/ ./src/
 COPY .env.example ./
 
-# Build the TypeScript code
+# Build
 RUN pnpm build
 
-CMD ["node", "dist/bin/cli.js"]
+# Set environment
+ENV NODE_ENV=production
+
+# Run
+CMD ["node", "dist/index.js"]

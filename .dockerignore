@@ -5,9 +5,16 @@ dist
 *.log
 *.md
 test*
+tests
 coverage
 .env
 .env.*
 !.env.example
 .DS_Store
 *.tgz
+build.js
+scripts
+__pycache__
+.pytest_cache
+.vscode
+.idea
