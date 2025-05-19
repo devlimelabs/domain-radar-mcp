@@ -1,0 +1,50 @@
+# Smithery AI Configuration for Domain Radar MCP
+smithery_version: "1.0"
+
+# Docker configuration
+docker:
+  build:
+    dockerfile: Dockerfile
+    context: .
+  
+# Basic metadata
+metadata:
+  name: domain-radar-mcp
+  description: MCP server for domain availability checking and monitoring
+  version: 1.0.0
+  author: DevLime Labs
+  tags:
+    - mcp
+    - domain
+    - availability
+    - monitoring
+
+# Build configuration
+build:
+  steps:
+    - name: Install dependencies
+      command: pnpm install --frozen-lockfile
+    - name: Build
+      command: pnpm build
+    - name: Test
+      command: pnpm test
+      
+# Runtime configuration
+runtime:
+  command: ["node", "dist/bin/cli.js"]
+  
+# Environment variables (if needed)
+environment:
+  NODE_ENV: production
+
+# Resources
+resources:
+  cpu: 256
+  memory: 512
+
+# Health check
+healthcheck:
+  test: ["CMD", "node", "-e", "process.exit(0)"]
+  interval: 30s
+  timeout: 10s
+  retries: 3
