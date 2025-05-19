@@ -1,50 +1,18 @@
 # Smithery AI Configuration for Domain Radar MCP
-smithery_version: "1.0"
+version: 1
 
-# Docker configuration
+# MCP servers typically use stdio, not network ports
+start:
+  command: ["node", "dist/bin/cli.js", "stdio"]
+
+# Use our custom Dockerfile
 docker:
-  build:
-    dockerfile: Dockerfile
-    context: .
-  
-# Basic metadata
-metadata:
-  name: domain-radar-mcp
-  description: MCP server for domain availability checking and monitoring
-  version: 1.0.0
-  author: DevLime Labs
-  tags:
-    - mcp
-    - domain
-    - availability
-    - monitoring
+  enabled: true
+  dockerfile: Dockerfile
 
-# Build configuration
-build:
-  steps:
-    - name: Install dependencies
-      command: pnpm install --frozen-lockfile
-    - name: Build
-      command: pnpm build
-    - name: Test
-      command: pnpm test
-      
-# Runtime configuration
-runtime:
-  command: ["node", "dist/bin/cli.js"]
-  
-# Environment variables (if needed)
+# Environment configuration
 environment:
   NODE_ENV: production
 
-# Resources
-resources:
-  cpu: 256
-  memory: 512
-
-# Health check
-healthcheck:
-  test: ["CMD", "node", "-e", "process.exit(0)"]
-  interval: 30s
-  timeout: 10s
-  retries: 3
+# MCP servers don't expose network ports by default
+expose_ports: []

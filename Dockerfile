@@ -1,42 +1,29 @@
 # Domain Radar MCP Server
-# Multi-stage build for efficient production Docker image
 
-# Build stage
-FROM node:20-alpine AS builder
+FROM node:20-alpine
 
 # Install pnpm
-RUN npm install -g pnpm
+RUN npm install -g pnpm@8
 
 WORKDIR /app
 
-# Copy package files and install dependencies
+# Copy package files
 COPY package.json pnpm-lock.yaml ./
+
+# Install all dependencies (both dev and prod for build)
 RUN pnpm install --frozen-lockfile
 
-# Copy source code
+# Copy source code and other necessary files
 COPY . .
 
 # Build the application
 RUN pnpm build
 
-# Production stage
-FROM node:20-alpine
+# Remove dev dependencies
+RUN pnpm prune --prod
 
-# Install pnpm
-RUN npm install -g pnpm
-
-WORKDIR /app
-
-# Copy package files and install production dependencies only
-COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile --prod
-
-# Copy built application from builder stage
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/.env.example ./.env.example
-
-# Set environment variables
+# Set environment
 ENV NODE_ENV=production
 
-# Command to run the application
-CMD ["node", "dist/bin/cli.js"]
+# MCP servers use stdio by default
+CMD ["node", "dist/bin/cli.js", "stdio"]
