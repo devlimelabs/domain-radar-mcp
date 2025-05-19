@@ -20,8 +20,7 @@
     "lint": "eslint --ext .ts src/",
     "test": "jest",
     "setup:dev": "bash scripts/setup-dev.sh",
-    "setup:claude": "node scripts/claude-desktop-setup.js",
-    "prepare": "npm run build"
+    "setup:claude": "node scripts/claude-desktop-setup.js"
   },
   "keywords": [
     "mcp",

@@ -23,12 +23,17 @@ WORKDIR /app
 # Install pnpm
 RUN npm install -g pnpm
 
-# Copy package files and install production dependencies only
-COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile --prod
+# Create a minimal package.json to avoid prepare scripts
+RUN echo '{}' > package.json
 
-# Copy built application from builder stage
+# Copy built application from builder stage FIRST
 COPY --from=builder /app/dist ./dist
+
+# Then copy the real package files
+COPY package.json pnpm-lock.yaml ./
+
+# Install production dependencies without running scripts
+RUN pnpm install --frozen-lockfile --prod --ignore-scripts
 
 # Copy .env.example file
 COPY .env.example .env.example
