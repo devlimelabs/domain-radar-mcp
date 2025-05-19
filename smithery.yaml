@@ -1,18 +1,3 @@
-# Smithery AI Configuration for Domain Radar MCP
 version: 1
-
-# MCP servers typically use stdio, not network ports
 start:
-  command: ["node", "dist/bin/cli.js", "stdio"]
-
-# Use our custom Dockerfile
-docker:
-  enabled: true
-  dockerfile: Dockerfile
-
-# Environment configuration
-environment:
-  NODE_ENV: production
-
-# MCP servers don't expose network ports by default
-expose_ports: []
+  command: ["node", "dist/bin/cli.js"]
