@@ -1,23 +1,40 @@
-FROM node:20
+FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Copy package files
-COPY package.json pnpm-lock.yaml tsconfig.json ./
-
-# Install pnpm and dependencies
+# Install pnpm first
 RUN npm install -g pnpm
-RUN pnpm install
 
-# Copy source
-COPY src/ ./src/
-COPY .env.example ./
+# Copy package files and install dependencies using pnpm
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
 
-# Build
+# Copy source code
+COPY . .
+
+# Build the application
 RUN pnpm build
 
-# Set environment
+# Production stage
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install pnpm
+RUN npm install -g pnpm
+
+# Copy package files and install production dependencies only
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile --prod
+
+# Copy built application from builder stage
+COPY --from=builder /app/dist ./dist
+
+# Copy .env.example file
+COPY .env.example .env.example
+
+# Set environment variables
 ENV NODE_ENV=production
 
-# Run
+# Start the application
 CMD ["node", "dist/index.js"]

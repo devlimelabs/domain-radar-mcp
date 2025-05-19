@@ -1,3 +1,17 @@
-version: 1
-start:
-  command: node dist/index.js
+# Smithery configuration for Domain Radar MCP
+# https://smithery.ai/docs/config#smitheryyaml
+
+startCommand:
+  type: stdio
+  commandFunction: |
+    (config) => ({
+      command: 'node',
+      args: ['dist/index.js'],
+      env: {
+        NODE_ENV: 'production'
+      }
+    })
+  configSchema:
+    type: object
+    properties: {}
+  exampleConfig: {}
