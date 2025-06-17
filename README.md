@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/devlimelabs-domain-radar-mcp-badge.png)](https://mseep.ai/app/devlimelabs-domain-radar-mcp)
+
 # Domain Radar MCP Server
 
 A Model Context Protocol (MCP) server that provides domain name information, availability checking, and trend analysis for Claude and other MCP clients.
